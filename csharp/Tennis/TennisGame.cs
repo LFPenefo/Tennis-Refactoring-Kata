@@ -1,6 +1,4 @@
-namespace Tennis
-{
-    class TennisGame : ITennisGame
+ class TennisGame : ITennisGame
     {
         private int m_score1 = 0;
         private int m_score2 = 0;
@@ -23,60 +21,66 @@ namespace Tennis
 
         public string GetScore()
         {
-            string score = "";
-            var tempScore = 0;
-            if (m_score1 == m_score2)
+
+            return m_score1 == m_score2 ? GetScoreEqualCases() : (m_score1 >= 4 || m_score2 >= 4) ? ScoreEqualGreaterFour() : ElseScoreCases();
+        }
+
+        #region private methods
+
+        private string GetScoreEqualCases()
+        {
+            switch (m_score1)
             {
-                switch (m_score1)
+                case 0:
+                    return "Love-All";
+                case 1:
+                    return "Fifteen-All";
+                case 2:
+                    return "Thirty-All";
+                default:
+                    return "Deuce";
+            }
+        }
+
+        private string ScoreEqualGreaterFour()
+        {
+            var minusResult = m_score1 - m_score2;
+
+            return minusResult == 1 ? "Advantage player1" : minusResult == -1 ? "Advantage player2" : minusResult >= 2 ? "Win for player1" : "Win for player2";
+            
+        }
+
+        private string ElseScoreCases()
+        {
+            int tempScore;
+            var score = "";
+
+            for (var i = 1; i < 3; i++)
+            {
+                if (i == 1) tempScore = m_score1;
+                else { score += "-"; tempScore = m_score2; }
+                switch (tempScore)
                 {
                     case 0:
-                        score = "Love-All";
+                        score += "Love";
                         break;
                     case 1:
-                        score = "Fifteen-All";
+                        score += "Fifteen";
                         break;
                     case 2:
-                        score = "Thirty-All";
+                        score += "Thirty";
                         break;
-                    default:
-                        score = "Deuce";
+                    case 3:
+                        score += "Forty";
                         break;
+                }
+            }
 
-                }
-            }
-            else if (m_score1 >= 4 || m_score2 >= 4)
-            {
-                var minusResult = m_score1 - m_score2;
-                if (minusResult == 1) score = "Advantage player1";
-                else if (minusResult == -1) score = "Advantage player2";
-                else if (minusResult >= 2) score = "Win for player1";
-                else score = "Win for player2";
-            }
-            else
-            {
-                for (var i = 1; i < 3; i++)
-                {
-                    if (i == 1) tempScore = m_score1;
-                    else { score += "-"; tempScore = m_score2; }
-                    switch (tempScore)
-                    {
-                        case 0:
-                            score += "Love";
-                            break;
-                        case 1:
-                            score += "Fifteen";
-                            break;
-                        case 2:
-                            score += "Thirty";
-                            break;
-                        case 3:
-                            score += "Forty";
-                            break;
-                    }
-                }
-            }
             return score;
         }
+
+        #endregion
+
     }
 }
 
